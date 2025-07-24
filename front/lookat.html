@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HW-lookat</title>
+    <script src="/lookat.js" defer></script>
+</head>
+
+<body>
+    <h1>[20250723]HW</h1>
+    <hr>
+    <h2>글</h2>
+    
+    <label for="title">제목: </label>
+    <input type="text" name="title" required><br><br>
+    <div id="createdAt"></div>
+    <div id="modifiedAt"></div>
+    <textarea name="content" cols="30" rows="10" required></textarea><br>
+
+    <button onclick="onModify()">수정</button>
+    <button onclick="onDelete()">삭제</button>
+    <button onclick="location.href='/'">취소</button>
+</body>
+
+</html>
