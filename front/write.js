@@ -1,10 +1,29 @@
+const categoryTag = document.querySelector('#category');
+
+onload = () => {
+  const categorys = JSON.parse(sessionStorage.getItem('categorys'));
+
+  let opt = '<option value=0 selected disabled>선택하세요</option>';
+  categorys.forEach((vo) => {
+    opt += `
+  <option value=${vo.categoryNo}>${vo.categoryName}</option>
+  `;
+  });
+  categoryTag.innerHTML = opt;
+};
+
 function onWrite() {
-  const titleTag = document.querySelector('input[type=text');
+  const titleTag = document.querySelector('input[type=text]');
   const contentTag = document.querySelector('textarea');
+
+  if (Number(categoryTag.value) === 0) {
+    alert('카테고리를 선택하셈');
+    console.log(categoryTag);
+    return;
+  }
 
   if (titleTag.value === '') {
     alert('제목을 입력하셈');
-    titleTag.foucs();
     return;
   }
   if (contentTag.value === '') {
@@ -12,7 +31,11 @@ function onWrite() {
     contentTag.focus();
     return;
   }
-  const vo = { title: titleTag.value, content: contentTag.value };
+  const vo = {
+    title: titleTag.value,
+    content: contentTag.value,
+    categoryNo: categoryTag.value,
+  };
   console.log(vo);
 
   const url = 'http://127.0.0.1/api/board';
@@ -27,7 +50,7 @@ function onWrite() {
     .then((res) => {
       if (!res.ok) throw new Error('1글쓰기 실패');
       alert('글쓰기 성공');
-      history.back();
+      location.href = '/';
     })
     .catch((err) => {
       alert(err.message);

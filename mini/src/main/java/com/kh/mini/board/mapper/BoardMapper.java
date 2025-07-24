@@ -10,27 +10,29 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
     @Select("""
-            SELECT COUNT(NO) FROM HW_BOARD WHERE DEL_YN = 'N'
+            SELECT COUNT(NO) FROM MINI_BOARD WHERE DEL_YN = 'N' AND PARENT_NO IS NULL
             """)
     int getRowCount();
 
     @Insert("""
-            INSERT INTO HW_BOARD(NO, TITLE, CONTENT, CATEGORY_NO)
-            VALUES(SEQ_HW_BOARD_ID.NEXTVAL, #{title}, #{content}, #{categoryNo})
+            INSERT INTO MINI_BOARD(NO, TITLE, CONTENT, CATEGORY_NO)
+            VALUES(SEQ_MINI_BOARD_ID.NEXTVAL, #{title}, #{content}, #{categoryNo})
             """)
     int insert(BoardVo vo);
 
     @Select("""
             SELECT
                 NO
+                , PARENT_NO
                 , TITLE
                 , CREATED_AT
                 , MODIFIED_AT
                 , CATEGORY_NO
             FROM
-                HW_BOARD
+                MINI_BOARD
             WHERE
                 DEL_YN = 'N'
+                AND PARENT_NO IS NULL
             ORDER BY NO DESC
             OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
             """)
@@ -39,22 +41,56 @@ public interface BoardMapper {
     @Select("""
             SELECT
                 NO
+                , PARENT_NO
+                , TITLE
+                , CREATED_AT
+                , MODIFIED_AT
+                , CATEGORY_NO
+            FROM
+                MINI_BOARD
+            WHERE
+                DEL_YN = 'N'
+            ORDER BY NO DESC
+            """)
+    List<BoardVo> selectBoardAll();
+
+    @Select("""
+            SELECT
+                NO
+                , PARENT_NO
                 , TITLE
                 , CONTENT
                 , CREATED_AT
                 , MODIFIED_AT
                 , CATEGORY_NO
             FROM
-                HW_BOARD
+                MINI_BOARD
             WHERE
                 NO = #{no}
                 AND DEL_YN = 'N'
             """)
     BoardVo selectOne(String no);
 
+    @Select("""
+            SELECT
+                NO
+                , PARENT_NO
+                , TITLE
+                , CONTENT
+                , CREATED_AT
+                , MODIFIED_AT
+                , CATEGORY_NO
+            FROM
+                MINI_BOARD
+            WHERE
+                PARENT_NO = #{no}
+                AND DEL_YN = 'N'
+            """)
+    List<BoardVo> selectChild(String no);
+
     @Delete("""
             UPDATE
-                HW_BOARD
+                MINI_BOARD
             SET
                 DEL_YN = 'Y'
             WHERE
@@ -65,7 +101,7 @@ public interface BoardMapper {
 
     @Update("""
             UPDATE
-                HW_BOARD
+                MINI_BOARD
             SET
                 TITLE = #{title}
                 , CONTENT = #{content}
@@ -82,7 +118,7 @@ public interface BoardMapper {
                 CATEGORY_NO
                 , CATEGORY_NAME
             FROM
-                HW_CATEGORY
+                MINI_CATEGORY
             ORDER BY CATEGORY_NO
             """)
     List<CategoryVo> getCategory();

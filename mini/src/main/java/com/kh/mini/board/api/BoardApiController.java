@@ -50,9 +50,26 @@ public class BoardApiController {
                 .ok(map);
     }
 
+    @GetMapping("all")
+    public ResponseEntity<List<BoardVo>> selectAll(){
+
+        var result = service.selectBoardAll();
+
+        return ResponseEntity
+                .ok(result);
+    }
+
     @GetMapping("/{no}")
     public ResponseEntity<BoardVo> selectOne(@PathVariable String no){
         var result = service.selectOne(no);
+
+        return ResponseEntity
+                .ok(result);
+    }
+
+    @GetMapping("/child/{no}")
+    public ResponseEntity<List<BoardVo>> selectChild(@PathVariable String no){
+        var result = service.selectChild(no);
 
         return ResponseEntity
                 .ok(result);

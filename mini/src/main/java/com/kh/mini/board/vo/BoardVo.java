@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class BoardVo {
     private String no;
+    private String parentNo;
     private String title;
     private String content;
     private String createdAt;

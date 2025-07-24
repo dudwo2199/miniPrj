@@ -1,5 +1,3 @@
-let categorys = [];
-
 onload = () => {
   reqCategory();
   reqBoards(1);
@@ -15,7 +13,7 @@ function reqCategory() {
       return res.json();
     })
     .then((data) => { 
-      categorys = data;
+      sessionStorage.setItem('categorys', JSON.stringify(data));
     })
     .catch((err) => {
       alert(err.message);
@@ -43,13 +41,15 @@ function renderBoard(data) {
   const tbody = document.querySelector('tbody');
   let row = '';
   
+  const categorys = JSON.parse(sessionStorage.getItem('categorys'));
   data.forEach((vo) => {
-    const cname = categorys.find(x => x.categoryNo === vo.categoryNo).categoryName;
+    
+    const categoryName = categorys.find(x => x.categoryNo === vo.categoryNo).categoryName;
     row += `
         <tr onclick='lookAt(${vo.no})'>
           <td>${vo.no}</td>
           <td>${vo.title}</td>
-          <td>${cname}</td>
+          <td>${categoryName}</td>
           <td>${vo.createdAt}</td>
         </tr>
         `;
