@@ -13,6 +13,8 @@ onload = () => {
 };
 
 function onWrite() {
+  const parentNo = sessionStorage.getItem('TargetNo');
+
   const titleTag = document.querySelector('input[type=text]');
   const contentTag = document.querySelector('textarea');
 
@@ -32,6 +34,7 @@ function onWrite() {
     return;
   }
   const vo = {
+    parentNo,
     title: titleTag.value,
     content: contentTag.value,
     categoryNo: categoryTag.value,

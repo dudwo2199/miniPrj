@@ -28,7 +28,6 @@ public class BoardApiController {
 
     @PostMapping
     public ResponseEntity<Object> insert(@RequestBody BoardVo vo){
-
         var result = service.insert(vo);
 
         return ResponseEntity

@@ -1,4 +1,5 @@
 onload = () => {
+  sessionStorage.clear();
   reqCategory();
   reqBoards(1);
 };
@@ -12,7 +13,7 @@ function reqCategory() {
 
       return res.json();
     })
-    .then((data) => { 
+    .then((data) => {
       sessionStorage.setItem('categorys', JSON.stringify(data));
     })
     .catch((err) => {
@@ -40,11 +41,12 @@ function reqBoards(p) {
 function renderBoard(data) {
   const tbody = document.querySelector('tbody');
   let row = '';
-  
+
   const categorys = JSON.parse(sessionStorage.getItem('categorys'));
   data.forEach((vo) => {
-    
-    const categoryName = categorys.find(x => x.categoryNo === vo.categoryNo).categoryName;
+    const categoryName = categorys.find(
+      (x) => x.categoryNo === vo.categoryNo
+    ).categoryName;
     row += `
         <tr onclick='lookAt(${vo.no})'>
           <td>${vo.no}</td>
@@ -84,23 +86,6 @@ function renderPagination(pvo) {
 }
 
 function lookAt(no) {
-  const url = `http://127.0.0.1/api/board/${no}`;
-
-  fetch(url)
-    .then((res) => {
-      if (!res.ok) throw new Error('글 읽어오기 실패');
-
-      return res.json();
-    })
-    .then((data) => {
-      console.log(data);
-
-      // history.pushState(data, '', '/lookat.html');
-
-      sessionStorage.setItem('lookat', JSON.stringify(data));
-      location.href = '/lookat.html';
-    })
-    .catch((err) => {
-      alert(err.message);
-    });
+  sessionStorage.setItem('TargetNo', no);
+  location.href = '/lookat.html';
 }

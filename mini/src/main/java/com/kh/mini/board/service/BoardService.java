@@ -80,4 +80,8 @@ public class BoardService {
     public List<BoardVo> selectChild(String no) {
         return mapper.selectChild(no);
     }
+
+    public BoardVo selectParent(String no){
+        return mapper.selectOne(no);
+    }
 }

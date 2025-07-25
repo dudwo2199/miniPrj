@@ -15,8 +15,8 @@ public interface BoardMapper {
     int getRowCount();
 
     @Insert("""
-            INSERT INTO MINI_BOARD(NO, TITLE, CONTENT, CATEGORY_NO)
-            VALUES(SEQ_MINI_BOARD_ID.NEXTVAL, #{title}, #{content}, #{categoryNo})
+            INSERT INTO MINI_BOARD(NO, TITLE, CONTENT, CATEGORY_NO, PARENT_NO)
+            VALUES(SEQ_MINI_BOARD_ID.NEXTVAL, #{title}, #{content}, #{categoryNo}, #{parentNo})
             """)
     int insert(BoardVo vo);
 

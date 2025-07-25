@@ -1,18 +1,32 @@
 let categorys = [];
+let TargetVo = null;
 onload = () => {
-  const data = sessionStorage.getItem('lookat');
   categorys = JSON.parse(sessionStorage.getItem('categorys'));
-  renderLookAt(JSON.parse(data));
+  const TargetNo = sessionStorage.getItem('TargetNo');
+
+  reqNode(TargetNo);
 };
 
+async function reqNode(no) {
+  sessionStorage.setItem('TargetNo', no);
+  const url = `http://127.0.0.1/api/board/${no}`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  TargetVo = data || [];
+
+  renderTarget(TargetVo);
+}
+
+const numberTag = document.querySelector('#number');
 const titleTag = document.querySelector('input[type=text]');
 const contentTag = document.querySelector('textarea');
 const createdAt = document.querySelector('#createdAt');
 const modifiedAt = document.querySelector('#modifiedAt');
 const categoryTag = document.querySelector('#category');
 
-let no = 0;
-function renderLookAt(vo) {
+async function renderTarget(vo) {
   let opt = '';
   categorys.forEach((cate) => {
     opt += `
@@ -23,16 +37,34 @@ function renderLookAt(vo) {
   });
   categoryTag.innerHTML = opt;
 
-  no = vo.no;
+  numberTag.textContent = `글번호:${vo.no}`;
   titleTag.value = vo.title;
   createdAt.innerHTML = `작성시간: ${vo.createdAt}`;
   modifiedAt.innerHTML = `수정시간: ${vo.modifiedAt || ''}`;
   contentTag.value = vo.content;
 
-  reqChild(no);
+  reqParent(vo.parentNo);
+  reqChild(vo.no);
+}
+
+async function reqParent(parentNo) {
+  if (parentNo === null || parentNo === undefined) {
+    renderParentList(null);
+    return;
+  }
+
+  const res = await fetch(`http://127.0.0.1/api/board/${parentNo}`);
+  const data = await res.json();
+  const parent = data || {};
+
+  renderParentList(parent);
 }
 
 async function reqChild(childNo) {
+  if (childNo === null || childNo === undefined) {
+    renderChildList(null);
+    return;
+  }
   const res = await fetch(`http://127.0.0.1/api/board/child/${childNo}`);
   const data = await res.json();
   const child = data || [];
@@ -40,28 +72,38 @@ async function reqChild(childNo) {
   renderChildList(child);
 }
 
-function renderChildList(childVo) {
-  const tbody = document.querySelector('tbody');
-  let row = '';
+function renderParentList(parentVo) {
+  const parentCanvas = document.querySelector('#parentNode>#parent-canvas');
 
+  if (parentVo === null || parentVo === undefined) {
+    parentCanvas.innerHTML = '';
+    return;
+  }
+
+  parentCanvas.innerHTML = `
+  <a onclick="reqNode(${parentVo.no})">${parentVo.no}|${parentVo.title}</a>
+  `;
+}
+
+function renderChildList(childVo) {
+  const childCanvas = document.querySelector('#childNode>#child-canvas');
+  if (childVo === null || childVo === undefined) {
+    childCanvas.innerHTML = '';
+    return;
+  }
+  let nodeHTML = '';
   childVo.forEach((vo) => {
-  const categoryName = categorys.find(x => x.categoryNo === vo.categoryNo).categoryName;
-    row += `
-        <tr onclick='lookAt(${vo.no})'>
-          <td>${vo.no}</td>
-          <td>${vo.title}</td>
-          <td>${categoryName}</td>
-          <td>${vo.createdAt}</td>
-        </tr>
-        `;
+    nodeHTML += `
+    <a onclick="reqNode(${vo.no})">${vo.no}|${vo.title}</a><br>
+    `;
   });
-  tbody.innerHTML = row;
+  childCanvas.innerHTML = nodeHTML;
 }
 
 function onModify() {
   const url = 'http://127.0.0.1/api/board';
   const vo = {
-    no,
+    no: TargetVo.no,
     title: titleTag.value,
     content: contentTag.value,
     categoryNo: categoryTag.value,
@@ -99,4 +141,9 @@ function onDelete() {
     .catch((err) => {
       alert(err.message);
     });
+}
+
+function onEntry() {
+  sessionStorage.setItem('TargetNo', TargetVo.no);
+  location.href = "/write.html";
 }
