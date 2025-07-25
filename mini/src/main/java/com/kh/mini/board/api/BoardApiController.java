@@ -84,7 +84,6 @@ public class BoardApiController {
 
     @PutMapping
     public ResponseEntity<Object> update(@RequestBody BoardVo vo){
-        System.out.println("vo = " + vo);
         var result = service.update(vo);
         return ResponseEntity
                 .ok(result);
