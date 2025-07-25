@@ -145,5 +145,5 @@ function onDelete() {
 
 function onEntry() {
   sessionStorage.setItem('TargetNo', TargetVo.no);
-  location.href = "/write.html";
+  location.href = "write.html";
 }

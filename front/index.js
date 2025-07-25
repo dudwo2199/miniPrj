@@ -87,5 +87,5 @@ function renderPagination(pvo) {
 
 function lookAt(no) {
   sessionStorage.setItem('TargetNo', no);
-  location.href = '/lookat.html';
+  location.href = 'lookat.html';
 }
