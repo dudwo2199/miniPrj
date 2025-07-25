@@ -120,7 +120,7 @@ function onModify() {
       if (!res.ok) throw new Error('수정 실패');
 
       alert('수정 성공');
-      location.href = '/';
+      location.href = 'index.html';
     })
     .catch((err) => {
       alert(err.message);
@@ -136,7 +136,7 @@ function onDelete() {
     .then((res) => {
       if (!res.ok) throw new Error('삭제 실패');
       alert('삭제 성공');
-      location.href = '/';
+      location.href = 'index.html';
     })
     .catch((err) => {
       alert(err.message);

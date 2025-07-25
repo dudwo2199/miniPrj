@@ -53,7 +53,7 @@ function onWrite() {
     .then((res) => {
       if (!res.ok) throw new Error('1글쓰기 실패');
       alert('글쓰기 성공');
-      location.href = '/';
+      location.href = 'index.html';
     })
     .catch((err) => {
       alert(err.message);
